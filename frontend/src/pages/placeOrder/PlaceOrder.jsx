@@ -1,10 +1,12 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState, useNavigate } from 'react';
 import './placeOrder.css';
 import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
 
 const PlaceOrder = () => {
   const {getTotalCartAmount, token, foodList, cartItems, url} = useContext(StoreContext);
+
+  const navigate = useNavigate()
 
   const [data, setData] = useState({
     firstName: '',
@@ -18,7 +20,7 @@ const PlaceOrder = () => {
     phone: ''
   })
 
-  const onChangeHander = (e) => {
+  const onChangeHandler = (e) => {
     const name = e.target.name;
     const value = e.target.value;
 
@@ -49,7 +51,16 @@ const PlaceOrder = () => {
     } else {
       alert('Error')
     }
+    // stripe dummy card
   }
+
+  useEffect(()=>{
+    if(!token) {
+      navigate('/cart')
+    } else if(getTotalCartAmount()) {
+      navigate('/cart')
+    }
+  }, [])
 
 
   return (
@@ -57,20 +68,20 @@ const PlaceOrder = () => {
       <div className="place-order-left">
         <p className="title">Delivery information</p>
         <div className="multi-fields">
-          <input required name='firstName' onChange={onChangeHander} value={data.firstName} type="text" placeholder='First name' />
-          <input required name='lastName' onChange={onChangeHander} value={data.lastName} type="text" placeholder='Last name' />
+          <input required name='firstName' onChange={onChangeHandler} value={data.firstName} type="text" placeholder='First name' />
+          <input required name='lastName' onChange={onChangeHandler} value={data.lastName} type="text" placeholder='Last name' />
         </div>
-        <input required name='email' onChange={onChangeHander} value={data.email} type="email" placeholder='Email Address' />
-        <input required name='street' onChange={onChangeHander} value={data.street} type="text" placeholder='Street' />
+        <input required name='email' onChange={onChangeHandler} value={data.email} type="email" placeholder='Email Address' />
+        <input required name='street' onChange={onChangeHandler} value={data.street} type="text" placeholder='Street' />
         <div className="multi-fields">
-          <input required name='city' onChange={onChangeHander} value={data.city} type="text" placeholder='City' />
-          <input required name='state' onChange={onChangeHander} value={data.state} type="text" placeholder='State' />
+          <input required name='city' onChange={onChangeHandler} value={data.city} type="text" placeholder='City' />
+          <input required name='state' onChange={onChangeHandler} value={data.state} type="text" placeholder='State' />
         </div>
         <div className="multi-fields">
-          <input required name='zipcode' onChange={onChangeHander} value={data.zipcode} type="text" placeholder='Zip code' />
-          <input required name='country' onChange={onChangeHander} value={data.country} type="text" placeholder='Country' />
+          <input required name='zipcode' onChange={onChangeHandler} value={data.zipcode} type="text" placeholder='Zip code' />
+          <input required name='country' onChange={onChangeHandler} value={data.country} type="text" placeholder='Country' />
         </div>
-        <input required name='phone' onChange={onChangeHander} value={data.phone} type="text" placeholder='Phone' />
+        <input required name='phone' onChange={onChangeHandler} value={data.phone} type="text" placeholder='Phone' />
       </div>
       <div className="place-order-right">
         <div className="cart-total">

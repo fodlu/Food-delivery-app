@@ -20,6 +20,7 @@ const loginUser = async (req, res) => {
         }
 
         const token = createToken(user._id);
+        console.log(user)
         res.json({success: true, token, user})
 
     } catch (error) {
@@ -29,7 +30,7 @@ const loginUser = async (req, res) => {
 };
 
 const createToken = (id) => {
-    jwt.sign({id}, process.env.JWT_SECRET)
+    return jwt.sign({id}, process.env.JWT_SECRET)
 }
 
 // register user
@@ -54,14 +55,14 @@ const registerUser = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = new userModel.create({
+        const newUser = await userModel.create({
             name,
             email,
             password: hashedPassword
         })
 
         const user = await newUser.save();
-        const token = createToken(user._id);
+        const token = createToken(newUser._id);
 
         res.json({success: true, token})
 
